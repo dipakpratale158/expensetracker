@@ -1,0 +1,16 @@
+.main {
+  display: flexbox;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
+  background-color: blanchedalmond;
+  padding: 1rem;
+}
+.darkMain {
+  display: flexbox;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
+  background-color: #001432;
+  padding: 1rem;
+}

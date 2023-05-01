@@ -1,0 +1,42 @@
+h4 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #051102;
+    text-align: center;
+    margin-top: 2rem;
+  }
+  
+  .nav-link {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .nav-link h3 {
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 0.25rem;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    width: 120px;
+  }
+  
+  .nav-link:hover h3,
+  .nav-link:focus h3 {
+    background-color: #d6dadf;
+    outline: none;
+  }
+  
+  .nav-link:active h3 {
+    background-color: #d4dfeb;
+  }

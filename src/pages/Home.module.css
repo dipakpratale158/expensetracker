@@ -1,0 +1,42 @@
+.title {
+  text-align: center;
+  padding: 5rem 0;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #333;
+  text-shadow: 2px 2px #ccc;
+  background-color: #f1f1f1;
+  border-radius: 1rem;
+  box-shadow: 2px 2px 5px #ccc;
+}
+
+.incompleteProfile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.incompleteProfile h4 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.navlink {
+  background-color: #f0ad4e;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+ .navlink:hover {
+  background-color: #e79016;
+  color: #fff;
+  cursor: pointer;
+}
