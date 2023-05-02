@@ -17,7 +17,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend,  Title} from 'chart.js';
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const ExpenseForm = () => {
-  const PAGE_SIZE = 10; // Number of items to display per page
+  const PAGE_SIZE = 5; // Number of items to display per page
 const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
 
   const dispatch = useDispatch();
@@ -26,6 +26,7 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
+  const dateInputRef=useRef()
   // const [expenseData, setExpenseData] = useState();
   const [status, setStatus] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,7 +44,7 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
     const enteredExpense = expenseRef.current.value;
     const enteredDescription = descriptionRef.current.value;
     const enteredCategory = categoryRef.current.value;
-
+  const enteredDateInput=dateInputRef.current.value;
     // Check that the entered expense is a number greater than 0
     if (
       enteredExpense.trim().length === 0 ||
@@ -72,6 +73,7 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
       expense: enteredExpense,
       description: enteredDescription,
       category: enteredCategory,
+      dateInput: enteredDateInput,
     };
 
     fetch(
@@ -101,6 +103,7 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
     expenseRef.current.value = "";
     descriptionRef.current.value = "";
     categoryRef.current.value = "";
+    dateInputRef.current.value="";
   };
 
 
@@ -138,7 +141,7 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
 
   ///edit button
   const editHandler = useCallback(
-    (key, expense, description, category) => {
+    (key, expense, description, category,dateInput) => {
       console.log(key);
       fetch(
         `https://loginpage-ff00d-default-rtdb.firebaseio.com/expenses/${key}.json`,
@@ -163,6 +166,7 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
       expenseRef.current.value = expense;
       descriptionRef.current.value = description;
       categoryRef.current.value = category;
+      dateInputRef.current.value=dateInput
     },
     [status]
   );
@@ -186,6 +190,7 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
             expense: data[key].expense,
             description: data[key].description,
             category: data[key].category,
+            dateInput:data[key].dateInput,
           });
         
       }
@@ -210,41 +215,109 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
         
         
     ///click add button show detatil
-        const expenseList = expenses.map(
-          ({ expense, description, category, key }) => {
-            return (
-              <li key={key}>
-                Expense: ${expense} Description: {description} category:
-                {category}{" "}
-                <button onClick={deleteHandler.bind(null, key)}>
-                  <FaTrash />
-                </button>
-                <button
-                  onClick={editHandler.bind(
-                    null,
-                    key,
-                    expense,
-                    description,
-                    category
-                  )}
-                >
-                  <FaEdit />
-                </button>
-              </li>
-            );
-          }
-        );
-        console.log(expenseList);
-        setExpenseData(expenseList);
-         // Calculate category totals for each page
-    const categoryTotals = {};
-    for (const expense of expenses) {
-      if (expense.category in categoryTotals) {
-        categoryTotals[expense.category] += +expense.expense;
-      } else {
-        categoryTotals[expense.category] = +expense.expense;
-      }
-    }
+//         const expenseList = expenses.map(
+//           ({ expense, description, category,dateInput, key }) => {
+//             return (
+//               <li key={key}>
+//                 {/* Expense: ${expense} - Description: {description} - category:
+//                 {category} - Date: {dateInput} {" "} */}
+//                 <table>
+//   <thead>
+//     <tr>
+//       <th>Expense</th>
+//       <th>Description</th>
+//       <th>Category</th>
+//       <th>Date</th>
+//     </tr>
+//   </thead>
+//   <tbody>
+//     <tr>
+//       <td>${expense}</td>
+//       <td>{description}</td>
+//       <td>{category}</td>
+//       <td>{dateInput}</td>
+//     </tr>
+//   </tbody>
+// </table>
+
+
+
+
+//                 <button onClick={deleteHandler.bind(null, key)}>
+//                   <FaTrash />
+//                 </button>
+//                 <button
+//                   onClick={editHandler.bind(
+//                     null,
+//                     key,
+//                     expense,
+//                     description,
+//                     category,
+//                     dateInput,
+//                   )}
+//                 >
+//                   <FaEdit />
+//                 </button>
+//               </li>
+//             );
+//           }
+//         );
+//         console.log(expenseList);
+//         setExpenseData(expenseList);
+//          // Calculate category totals for each page
+//     const categoryTotals = {};
+//     for (const expense of expenses) {
+//       if (expense.category in categoryTotals) {
+//         categoryTotals[expense.category] += +expense.expense;
+//       } else {
+//         categoryTotals[expense.category] = +expense.expense;
+//       }
+//     }
+
+
+
+/////another verson 
+const expenseList = expenses.map(({ expense, description, category, dateInput, key }) => {
+  return (
+     
+
+
+    <tr key={key}>
+      <td>${expense}</td>
+      <td>{description}</td>
+      <td>{category}</td>
+      <td>{dateInput}</td>
+      <td>
+        <button onClick={() => deleteHandler(key)}>
+          <FaTrash />
+        </button>
+        <button onClick={() => editHandler(key, expense, description, category, dateInput)}>
+          <FaEdit />
+        </button>
+      </td>
+    </tr>
+  );
+});
+
+console.log(expenseList);
+
+setExpenseData(expenseList);
+
+// Calculate category totals for each page
+const categoryTotals = {};
+
+for (const expense of expenses) {
+  if (expense.category in categoryTotals) {
+    categoryTotals[expense.category] += +expense.expense;
+  } else {
+    categoryTotals[expense.category] = +expense.expense;
+  }
+}
+
+
+
+
+
 
     // Sort the categories by their total expenses
     const sortedCategories = Object.keys(categoryTotals).sort(
@@ -348,6 +421,8 @@ const getPageButtons = () => {
     { label: "expense", key: "expense" },
     { label: "description", key: "description" },
     { label: "category", key: "category" },
+    { label: "dateInput", key: "dateInput" },
+
   ];
 
   /////download button 
@@ -440,12 +515,24 @@ backgroundColor: [
               <option value="fuel" />
               <option value="entertainment" />
               <option value="shopping" />
+              <option value="paintings" />
+              <option value="books" />
               <option value="other" />
             </datalist>
+            <label htmlFor="dateInput">Date of expense:</label>
+        <input
+        style={{margin:"1rem"}}
+          type="date"
+          id="date"
+          ref={dateInputRef}
+          required
+        />
           </div>
           <div className={classes.actions}>
             <button type="submit">Add expense</button>
           </div>
+          
+        
         </form>
 
       </div>

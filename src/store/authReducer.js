@@ -8,6 +8,7 @@ const initialAuthState = {
   isAuthenticated: userIsLoggedIn,
   token: initialToken,
   email: initialEmail,
+
 };
 
 const authSlice = createSlice({
@@ -29,6 +30,15 @@ const authSlice = createSlice({
       localStorage.removeItem("email");
       state.isAuthenticated = false;
     },
+    setIdToken(state ,action){
+            state.idToken = action.payload ;
+        },
+        setUserID(state , action){
+            state.userID = action.payload ;
+        },
+        setEmailVerified(state,action){
+            state.isEmailVerified = action.payload;
+        }
   },
 });
 

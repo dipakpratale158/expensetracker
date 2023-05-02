@@ -32,7 +32,7 @@ const Home = () => {
         }
       })
       .catch((err) => {
-        let errorMessage = "failed to get details";
+        let errorMessage = "failed to get details please logout and login again";
         alert(errorMessage);
         throw new Error(err.message);
       });
@@ -68,7 +68,7 @@ const Home = () => {
   };
   return (
     <Fragment>
-      <h1 className={classes.title}>Welcome</h1>
+      <h1 className={classes.title}>Welcome Profile</h1>
 
 
       {/* if email already verify not showing veryfy button */}

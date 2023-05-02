@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import styles from './UserDetails.module.css'
-import { useNavigate, useParams } from "react-router-dom";
+import styles from './Profile.module.css'
+import { useParams } from "react-router-dom";
 import { FaEnvelope, FaCheckCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -75,11 +75,6 @@ async function verifyEmail(idToken) {
 }
 
 function ProfilePage(props) {
-
-  const navigate = useNavigate();
-  const cancelHandler = () => {
-    navigate("/");
-  };
   // const ctx = useContext(AppContext);
   const params = useParams();
   const idToken = useSelector((state) => state.auth.idToken);
@@ -188,9 +183,6 @@ function ProfilePage(props) {
             required
           />
           <button type="submit">Update Profile</button>
-          
-          <button style={{backgroundColor:"orange",margin:"1rem"}}onClick={cancelHandler}>Cancel</button>
-
         </form>
       </div>
     </div>
