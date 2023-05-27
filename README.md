@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+expanse tracker with pichart
+https://expensetrackerwithpichart.netlify.app
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -41,8 +45,7 @@ You don't have to ever use `eject`. The curated feature set is suitable for smal
 
 ## Learn More
 
-expanse tracker with pichart
-https://expensetrackerwithpichart.netlify.app/auth
+
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
