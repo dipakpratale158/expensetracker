@@ -33,8 +33,8 @@ const Home = () => {
       })
       .catch((err) => {
         let errorMessage = "failed to get details please logout and login again";
-        alert(errorMessage);
-        throw new Error(err.message);
+        // alert(errorMessage);
+        // throw new Error(err.message);
       });
   }, [token]);
 //emqail verifiation

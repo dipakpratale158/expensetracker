@@ -1,51 +1,48 @@
-import React, { useState } from "react";
+import React from "react";
 import classes from "./Footer.module.css";
-import { FaYoutube, FaInstagram, FaTwitter } from "react-icons/fa";
+import instagramIcon from "../../assets/instagram.png";
+import twitterIcon from "../../assets/twitter.png";
+import youtubeIcon from "../../assets/youtube.png";
 import { useSelector } from "react-redux";
 
 const Footer = () => {
   const theme = useSelector((state) => state.theme.theme);
-  const [clickedIcon, setClickedIcon] = useState(null);
-
-  const handleIconClick = (iconName, link) => {
-    setClickedIcon(iconName);
-    window.open(link);
-  };
-
   return (
     <footer className={theme === "light" ? classes.footer : classes.darkFooter}>
       <ul>
         <li>
-          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://www.youtube.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="youtube"
+          >
             Youtube
+         
+          <img src={youtubeIcon} alt="Youtube" />
           </a>
-          <FaYoutube
-            size={24}
-            onClick={() => handleIconClick("youtube", "https://www.youtube.com/")}
-            className={clickedIcon === "youtube" ? classes.clickedIcon : ""}
-            style={{ cursor: "pointer" }}
-          />
         </li>
         <li>
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://www.instagram.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="instagram"
+          >
             Instagram
+          
+          <img src={instagramIcon} alt="Instagram" />
           </a>
-          <FaInstagram
-            size={24}
-            onClick={() => handleIconClick("instagram", "https://www.instagram.com/")}
-            className={clickedIcon === "instagram" ? classes.clickedIcon : ""}
-            style={{ cursor: "pointer" }}
-          />
         </li>
         <li>
-          <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://twitter.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="twitter"
+          >
             Twitter
-            <FaTwitter
-              size={24}
-              onClick={() => handleIconClick("twitter", "https://twitter.com/")}
-              className={clickedIcon === "twitter" ? classes.clickedIcon : ""}
-              style={{ cursor: "pointer" }}
-            />
+            <img src={twitterIcon} alt="twitter" />
           </a>
         </li>
       </ul>

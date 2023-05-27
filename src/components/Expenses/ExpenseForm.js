@@ -14,15 +14,20 @@ import { themeActions } from "../../store/themeReducer";
 import { CSVLink } from "react-csv";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend,  Title} from 'chart.js';
+import { useContext } from "react";
+import AuthContext from "../../store/AuthContext";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const ExpenseForm = () => {
-  const PAGE_SIZE = 5; // Number of items to display per page
+  const PAGE_SIZE = 10; // Number of items to display per page
 const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
 
   const dispatch = useDispatch();
   const totalAmount = useSelector((state) => state.expense.totalAmount);
   const premium = useSelector((state) => state.expense.premium);
+  const idToken = useSelector(state=>state.auth.idToken)
+  const userID = useSelector(state=>state.auth.userID)
+const ctx=useContext(AuthContext)
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
@@ -33,7 +38,6 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
   const [totalPages, setTotalPages] = useState(0);
   const [expenseData, setExpenseData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
-  // const [selectedMonth, setSelectedMonth] = useState(null);
 
   const [chartLabels, setChartLabels] = useState([]);
   const [chartData, setChartData] = useState([]);
@@ -75,9 +79,10 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
       category: enteredCategory,
       dateInput: enteredDateInput,
     };
+  
 
     fetch(
-      "https://loginpage-ff00d-default-rtdb.firebaseio.com/expenses.json",
+      `https://loginpage-ff00d-default-rtdb.firebaseio.com/users/${userID}/expenses.json?auth=${idToken}`,
       {
         method: "POST",
         body: JSON.stringify(expenseObj),
@@ -113,10 +118,10 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
 
 //delete button
   const deleteHandler = useCallback(
-    (key) => {
+    (key,idToken, userID) => {
       console.log(key);
       fetch(
-        `https://loginpage-ff00d-default-rtdb.firebaseio.com/expenses/${key}.json`,
+        `https://loginpage-ff00d-default-rtdb.firebaseio.com/users/${userID}/expenses/${key}.json?auth=${idToken}`,
         {
           method: "DELETE",
         }
@@ -141,10 +146,10 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
 
   ///edit button
   const editHandler = useCallback(
-    (key, expense, description, category,dateInput) => {
+    (key, expense, description, category,dateInput,idToken, userID) => {
       console.log(key);
       fetch(
-        `https://loginpage-ff00d-default-rtdb.firebaseio.com/expenses/${key}.json`,
+        `https://loginpage-ff00d-default-rtdb.firebaseio.com/users/${userID}/expenses/${key}.json?auth=${idToken}`,
         {
           method: "DELETE",
         }
@@ -173,7 +178,7 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
 
   useEffect(() => {
     fetch(
-      `https://loginpage-ff00d-default-rtdb.firebaseio.com/expenses.json`
+      `https://loginpage-ff00d-default-rtdb.firebaseio.com/users/${userID}/expenses.json?auth=${idToken}`
     )
       .then((res) => {
         if (res.ok) {
@@ -212,71 +217,21 @@ const PAGE_RANGE_DISPLAYED = 5; // Number of page buttons to display
   
         dispatch(expenseActions.addExpense(expenses));
 
-        
-        
-    ///click add button show detatil
-//         const expenseList = expenses.map(
-//           ({ expense, description, category,dateInput, key }) => {
-//             return (
-//               <li key={key}>
-//                 {/* Expense: ${expense} - Description: {description} - category:
-//                 {category} - Date: {dateInput} {" "} */}
-//                 <table>
-//   <thead>
-//     <tr>
-//       <th>Expense</th>
-//       <th>Description</th>
-//       <th>Category</th>
-//       <th>Date</th>
-//     </tr>
-//   </thead>
-//   <tbody>
-//     <tr>
-//       <td>${expense}</td>
-//       <td>{description}</td>
-//       <td>{category}</td>
-//       <td>{dateInput}</td>
-//     </tr>
-//   </tbody>
-// </table>
 
 
 
 
-//                 <button onClick={deleteHandler.bind(null, key)}>
-//                   <FaTrash />
-//                 </button>
-//                 <button
-//                   onClick={editHandler.bind(
-//                     null,
-//                     key,
-//                     expense,
-//                     description,
-//                     category,
-//                     dateInput,
-//                   )}
-//                 >
-//                   <FaEdit />
-//                 </button>
-//               </li>
-//             );
-//           }
-//         );
-//         console.log(expenseList);
-//         setExpenseData(expenseList);
-//          // Calculate category totals for each page
-//     const categoryTotals = {};
-//     for (const expense of expenses) {
-//       if (expense.category in categoryTotals) {
-//         categoryTotals[expense.category] += +expense.expense;
-//       } else {
-//         categoryTotals[expense.category] = +expense.expense;
-//       }
-//     }
 
 
 
-/////another verson 
+
+
+
+
+
+
+
+/////show data when adding expenses
 const expenseList = expenses.map(({ expense, description, category, dateInput, key }) => {
   return (
      
@@ -316,9 +271,6 @@ for (const expense of expenses) {
 
 
 
-
-
-
     // Sort the categories by their total expenses
     const sortedCategories = Object.keys(categoryTotals).sort(
       (a, b) => categoryTotals[b] - categoryTotals[a]
@@ -339,7 +291,7 @@ for (const expense of expenses) {
     setChartData(sortedCategories.map((category) => categoryTotals[category]));
  
       });
-  }, [currentPage, deleteHandler, editHandler, status, dispatch]);
+  }, [idToken, userID,currentPage, deleteHandler, editHandler, status, dispatch]);
   
 
 
@@ -429,8 +381,12 @@ const getPageButtons = () => {
   const csvReport = { data: data, headers: headers, filename: "expenses.csv" };
   
 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////
   return (
-    <Fragment>
+   <Fragment>
        {getPageButtons()}
 
        <div>
@@ -487,6 +443,9 @@ backgroundColor: [
       </div>
     </div>
 
+
+
+
 {/* theme section */}
       <div
         className={
@@ -495,8 +454,19 @@ backgroundColor: [
             : classes["form-container-dark"]
         }
       >
+
+
+
+
+
+
+
+
+
+
+
         {/*expense form  */}
-        <form onSubmit={expenseFormSubmitHandler}>
+       <form onSubmit={expenseFormSubmitHandler}>
           <div className={classes.control}>
             <label htmlFor="expense">Expense Amount</label>
             <br />
@@ -519,7 +489,8 @@ backgroundColor: [
               <option value="books" />
               <option value="other" />
             </datalist>
-            <label htmlFor="dateInput">Date of expense:</label>
+            
+            <label  htmlFor="dateInput">Date of expense:</label>
         <input
         style={{margin:"1rem"}}
           type="date"
@@ -537,37 +508,48 @@ backgroundColor: [
 
       </div>
   
-
-      <div
+      {/* {!ctx.isLoggedIn &&  */}
+       <div
         className={theme === "light" ? classes.display : classes.darkDisplay}
         id="showExpenses"
       >
         <h3>List of expenses:</h3>
         <ul id="expenseList">{expenseData}</ul>
       </div>
+{/* } */}
       <div
         className={theme === "light" ? classes.display : classes.darkDisplay}
       >
-        {/* if expense amounth >2000 showing primium button */}
-        <h3>
-          Total Amount:
-          {totalAmount > 10000 ? (
-            premium ? (
-              <div>
-                <p>{totalAmount}</p>
-                <button onClick={switchThemeHandler}>
-                  {theme === "light" ? "dark theme" : "light theme"}
-                </button>
-                <CSVLink {...csvReport} style={{color:"blue",margin:"1rem"}}>Download</CSVLink>
-              </div>
-            ) : (
-              <button onClick={activatePremiumHandler}>Activate premium</button>
-            )
-          ) : (
-            totalAmount
-          )}
-        </h3>
 
+        
+        {/* if expense amounth >2000 showing primium button */}
+       
+        {totalAmount > 10000 && !premium && (
+    <div>
+      <h1>Unlock Premium Features for Expenses Over $10,000</h1>
+      <br />
+    </div>
+  )}
+  <h3>
+    Total Amount:
+    {totalAmount > 10000 ? (
+      premium ? (
+        <div>
+          <p>{totalAmount}</p>
+          <button onClick={switchThemeHandler}>
+            {theme === "light" ? "dark theme" : "light theme"}
+          </button>
+          <CSVLink {...csvReport} style={{ color: "blue", margin: "1rem" }}>
+            Download
+          </CSVLink>
+        </div>
+      ) : (
+        <button onClick={activatePremiumHandler}>Activate premium</button>
+      )
+    ) : (
+      <p>You have spent ${totalAmount}. To unlock premium features, you need to spend over $10,000 in total expenses.</p>
+    )}
+  </h3>
 
 
 
